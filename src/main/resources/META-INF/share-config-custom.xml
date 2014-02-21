@@ -1,0 +1,151 @@
+<alfresco-config>
+    <!-- Document Library config section -->
+    <config evaluator="string-compare" condition="DocumentLibrary">
+    
+	<aspects>
+		<!-- Aspects that a user can see -->
+		<visible>
+ 			<aspect name="mdt:MecaDocTrackElementIDAspect" />
+		</visible>
+
+		<!-- Aspects that a user can add. Same as "visible" if left empty -->
+		<addable>
+		</addable>
+
+		<!-- Aspects that a user can remove. Same as "visible" if left empty -->
+		<removeable>
+		</removeable>
+	</aspects>
+	
+	<!--  tipi che l'utente può settare a mano -->
+	<types>
+		<type name="cm:folder">
+<!--		<subtype name="mdt:folder" /> -->
+			<subtype name="mdt:folderMatricola" />
+			<subtype name="mdt:folderLotto" />
+		</type>
+	</types>
+
+	<!--  le properties per il sort possono essere definite anche nel lc-mdt-extension.xml -->
+	<sorting>
+		<sort label="lc.mdt.shlabel.idElemento">mdt:idElemento|true</sort>
+		<sort label="lc.mdt.shlabel.articolo">mdt:articolo|true</sort>
+		<sort label="lc.mdt.shlabel.job">mdt:job|true</sort>
+		<sort label="lc.mdt.shlabel.riferimento">mdt:riferimento|true</sort>
+	</sorting>
+
+	<doclist>
+		<view-renderers>
+			<view-renderer id="mdttable" iconClass="table" label="lc.mdt.button.view.table" index="50" widget="Alfresco.DocumentListTableViewRenderer">
+				<dependencies>
+					<js src="components/documentlibrary/documentlist-view-detailed.js" />
+					<js src="components/documentlibrary/documentlist-view-table.js" />
+					<css src="components/documentlibrary/documentlist-view-table.css" />
+				</dependencies>
+				<json-config>
+					{
+					"actions": {
+						"show": "true"
+					},
+					"indicators": {
+						"show": "true"
+					},
+					"selector": {
+						"show": "true"
+					},
+					"thumbnail": {
+						"show": "false"
+					},
+					"propertyColumns": [
+						{
+							"property": "mdt:idElemento",
+							"label": "lc.mdt.shlabel.idElemento",
+							"width": "80"
+						},
+						{
+							"property": "mdt:articolo",
+							"label": "lc.mdt.shlabel.articolo",
+							"width": "80"
+						},
+						{
+							"property": "mdt:job",
+							"label": "lc.mdt.shlabel.job",
+							"width": "65"
+						},
+						{
+							"property": "mdt:riferimento",
+							"label": "lc.mdt.shlabel.riferimento",
+							"width": "65"
+						},
+						{
+							"property": "mdt:listaElementi",
+							"label": "lc.mdt.shlabel.listaElementi",
+							"width": "150"
+						},
+						{
+							"property": "cm:description",
+							"label": "lc.mdt.shlabel.description",
+							"width": "250"
+						}
+					]
+				}
+				</json-config>
+			</view-renderer>
+		</view-renderers>
+	</doclist>
+    </config>
+
+	<config evaluator="aspect" condition="mdt:MecaDocTrackElementIDAspect">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="mdt:idElemento" force="true" />
+				</field-visibility>
+				<appearance>                    
+					<field id="mdt:idElemento" label-id="forms.label.idElemento" />
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	<config evaluator="aspect" condition="mdt:MecaDocTrackArticleIDAspect">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="mdt:articolo" force="true" />
+				</field-visibility>
+				<appearance>                    
+					<field id="mdt:articolo" label-id="forms.label.articolo" />
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	<config evaluator="aspect" condition="mdt:MecaDocTrackJobIDAspect">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="mdt:job" force="true" />
+					<show id="mdt:riferimento" force="true" />
+				</field-visibility>
+				<appearance>                    
+					<field id="mdt:job" label-id="forms.label.job" />
+					<field id="mdt:riferimento" label-id="forms.label.riferimento" />
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	<config evaluator="aspect" condition="mdt:MecaDocTrackElementGroupAspect">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="mdt:listaElementi" force="true" />
+				</field-visibility>
+				<appearance>                    
+					<field id="mdt:listaElementi" label-id="forms.label.listaElementi" />
+				</appearance>
+			</form>
+		</forms>
+	</config>
+
+</alfresco-config>
+
+

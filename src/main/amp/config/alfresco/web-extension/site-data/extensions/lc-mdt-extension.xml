@@ -1,0 +1,217 @@
+<extension>
+
+   <!--
+      Note!
+
+      These modules are set to auto-deploy on startup, but can also be deployed and undeployed at:
+      http://localhost:8080/share/page/modules/deploy
+   -->
+
+   <modules>
+
+      <module>
+         <id>lc mdt (1) Global changes</id>
+         <auto-deploy>true</auto-deploy>
+
+         <!-- No evaluator since these are global changes which always are applied -->
+
+         <!-- Enhance individual WebScripts when their paths match -->
+         <customizations>
+            <customization>
+               <targetPackageRoot>org.alfresco</targetPackageRoot>
+               <sourcePackageRoot>lc.mdt.customizations</sourcePackageRoot>
+            </customization>
+         </customizations>
+
+      </module>
+   </modules>
+
+
+   <modules>
+      <module>
+         <id>lc mdt (2) Site changes</id>
+         <auto-deploy>true</auto-deploy>
+
+         <!--
+            Base evaluator that decides if any of the customizations, components
+            or configurations should be used
+         -->
+         <evaluator type="site.module.evaluator">
+            <params>
+               <sites>.*</sites>
+               <sitePresets>lc-mdt-preset</sitePresets>
+               <applyForNonSites>false</applyForNonSites>
+               <groups>.*</groups>
+            </params>
+         </evaluator>
+
+         <!--
+            Enhance individual WebScripts when their paths match
+         -->
+         <customizations>
+            <customization>
+               <targetPackageRoot>org.alfresco</targetPackageRoot>
+               <sourcePackageRoot>lc.mdt.customizations-site</sourcePackageRoot>
+            </customization>
+         </customizations>
+
+
+         <!--
+            Add/replace/remove components to/in/from <@regions/> for the site here.
+            Will only be used when this module's base evaluator (site.module.evaluator) returns true.
+            To identify the scope, region-id & source-id use SurfBug to inspect the details of a webscript/components
+            on a page, it can be enabled at http://localhost:8081/share/service/index
+         -->
+         <components>
+
+            <!-- Remove Example: Tag Panel on "Document Details" page -->
+            <!--
+            <component>
+               <scope>template</scope>
+               <region-id>document-tags</region-id>
+               <source-id>document-details</source-id>
+               <sub-components>
+                  <sub-component id="default">
+                     <evaluations>
+                        <evaluation id="lc-mdt-removeTags">
+                           <render>false</render>
+                        </evaluation>
+                     </evaluations>
+                  </sub-component>
+               </sub-components>
+            </component>
+            -->
+
+         </components>
+
+
+         <!--
+            Add Site specific config here.
+            Will only be merged when this module's base evaluator (site.module.evaluator) returns true
+         -->
+         <configurations>
+
+            <!--
+               Add mappings from pageId > url to the global/default SitePages map
+               (only required for pages that wants to add parameters)
+            -->
+            <config evaluator="string-compare" condition="SitePages">
+               <pages>
+                  <page id="lc-mdt-home">lc-mdt-home</page>
+               </pages>
+            </config>
+
+            <!-- Add Doclib Action config -->
+            <config evaluator="string-compare" condition="DocLibActions">
+
+               <actions>
+
+                  <!-- solo le azioni relative all'aspetto MecaDocTrackElementIDAspect sono definite. Il resto viene fatto in via programmatica -->
+
+                  <!-- Apply MecaDocTrackElement aspect action -->
+                  <action id="lc-mdt-addMecaDocTrackElementIDAspect" type="javascript" label="lc.mdt.actions.addMecaDocTrackElementIDAspect.label"  icon="../../../../images/lc/mdt/mecadoctrack-aspect-16.png">
+                     <evaluator negate="true">lc.mdt.evaluator.doclib.hasMecaDocTrackElementIDAspect</evaluator>
+                     <permissions>
+                        <permission allow="true">Write</permission>
+                     </permissions>
+                     <param name="function">onActionSimpleRepoAction</param>
+                     <param name="action">add-features</param>
+                     <param name="aspect-name">mdt:MecaDocTrackElementIDAspect</param>
+                     <param name="successMessage">lc.mdt.actions.addMecaDocTrackElementIDAspect.success</param>
+                     <param name="failureMessage">lc.mdt.actions.addMecaDocTrackElementIDAspect.failure</param>
+                  </action>
+
+               </actions>
+
+
+               <actionGroups>
+
+                  <!-- Add actions to Document Library -->
+                  <actionGroup id="document-browse">
+                  	 <!-- azione aggiunta per poter modificare a mano il type dei documenti -->
+                     <action index="500" id="document-change-type" />
+                     <action index="501" id="lc-mdt-addMecaDocTrackElementIDAspect" />
+                  </actionGroup>
+
+                  <!-- Add actions to Document Details page -->
+                  <actionGroup id="document-details">
+                  	 <!-- azione aggiunta per poter modificare a mano il type dei documenti -->
+                     <action index="500" id="document-change-type" />
+                     <action index="501" id="lc-mdt-addMecaDocTrackElementIDAspect" />
+                  </actionGroup>
+
+               </actionGroups>
+            </config>
+
+
+
+
+            <!-- Change the metadata displayed in the Document Library for nodes with the MecaDocTrack aspect/types -->
+            <!-- mdt:folderLotto -->
+            <config evaluator="string-compare" condition="DocumentLibrary">
+               <metadata-templates>
+                  <template id="lc-mdt-folderlotto">
+                     <evaluator>lc.mdt.evaluator.doclib.isMDTFolderLottoType</evaluator>
+                     <line index="10" id="mdt:articolo">{mdt_articolo lc.mdt.metadata.articolo}</line>
+                     <line index="20" id="mdt:job">{mdt_job lc.mdt.metadata.job}</line>
+                     <line index="30" id="mdt:riferimento">{mdt_riferimento lc.mdt.metadata.riferimento}</line>
+                  </template>
+               </metadata-templates>
+            </config>
+
+            <!-- mdt:folderMatricola -->
+            <config evaluator="string-compare" condition="DocumentLibrary">
+               <metadata-templates>
+                  <template id="lc-mdt-foldermatricola">
+                     <evaluator>lc.mdt.evaluator.doclib.isMDTFolderMatricolaType</evaluator>
+                     <line index="10" id="mdt:articolo">{mdt_articolo lc.mdt.metadata.articolo}</line>
+                     <line index="20" id="mdt:job">{mdt_job lc.mdt.metadata.job}</line>
+                     <line index="30" id="mdt:riferimento">{mdt_riferimento lc.mdt.metadata.riferimento}</line>
+                     <line index="40" id="mdt:listaElementi">{mdt_listaElementi lc.mdt.metadata.listaElementi}</line>
+                  </template>
+               </metadata-templates>
+            </config>
+
+            <!-- MecaDocTrackElement aspect identifica i documenti di tipo mdt ci interessa visualizzare l'idElemento -->
+            <config evaluator="string-compare" condition="DocumentLibrary">
+               <metadata-templates>
+                  <template id="lc-mdt-doc">
+                     <evaluator>lc.mdt.evaluator.doclib.hasMecaDocTrackElementIDAspect</evaluator>
+                     <line index="10" id="date">{date}{size}</line>
+                     <line index="20" id="mdt:idElemento">{mdt_idElemento lc.mdt.metadata.idElemento}</line>
+                     <line index="30" id="cm:description">{cm_description lc.mdt.metadata.description}</line>
+                  </template>
+               </metadata-templates>
+            </config>
+
+
+            <!-- Add an indicator in the Document Library for nodes with the property mdt:idElemento -->
+            <config evaluator="string-compare" condition="DocumentLibrary">
+               <indicators>
+                  <indicator id="lc-mdt-type" index="10" icon="../../../../images/lc/mdt/mdtaspects-16.png" label="lc.mdt.indicator.mdtAspect">
+                     <evaluator>lc.mdt.evaluator.doclib.hasMecaDocTrackElementIDAspect</evaluator>
+                     <labelParam index="0">{jsNode.properties.cm_name}</labelParam>
+                  </indicator>
+               </indicators>
+            </config>
+
+            <!-- Add idElemento , etc... to the list of sortable fields -->
+            <!-- già aggiunte tramite share-config-custom 
+            <config evaluator="string-compare" condition="DocumentLibrary">
+               <sorting>
+                  <sort label="lc.mdt.shlabel.idElemento">mdt:idElemento|true</sort>
+                  <sort label="lc.mdt.shlabel.articolo">mdt:articolo|true</sort>
+                  <sort label="lc.mdt.shlabel.job">mdt:job|true</sort>
+                  <sort label="lc.mdt.shlabel.riferimento">mdt:riferimento|true</sort>
+               </sorting>
+            </config>
+			-->
+
+
+
+         </configurations>
+      </module>
+
+   </modules>
+
+</extension>

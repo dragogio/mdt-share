@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>${pageLowercasedXmlEscaped}</title>
+   <title-id>page.lc-mdt-home.title</title-id>
+   <description>lc mdt ${pageLowercasedXmlEscaped} Page</description>
+   <description-id>page.lc-mdt-home.description</description-id>
+   <template-instance>1-column</template-instance>
+   <authentication>user</authentication>
+   <components>
+
+      <component>
+         <region-id>title</region-id>
+         <sub-components>
+            <sub-component id="site-title">
+               <url>/components/title/collaboration-title</url>
+            </sub-component>
+            <sub-component id="site-navigation">
+               <url>/components/navigation/collaboration-navigation</url>
+            </sub-component>
+         </sub-components>
+      </component>
+
+      <component>
+         <region-id>column</region-id>
+         <sub-components>
+            <sub-component id="lc-mdt-homescript">
+               <url>/lc/mdt/components/homescript</url>
+            </sub-component>
+         </sub-components>
+      </component>
+
+   </components>
+</page>

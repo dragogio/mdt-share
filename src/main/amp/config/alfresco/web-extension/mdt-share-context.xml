@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+
+   <!-- GLOBAL -->
+
+
+   <!-- I18N -->
+
+   <!-- Add mdt messages -->
+    <bean id="${project.artifactId}_resources" class="org.springframework.extensions.surf.util.ResourceBundleBootstrapComponent">
+        <property name="resourceBundles">
+            <list>
+                <value>alfresco.module.${project.artifactId}.messages.mdtModel</value>
+            </list>
+        </property>
+    </bean>
+
+
+   <!-- DOCLIB -->
+
+	<!-- Is type "mdt:folderLotto" evaluator -->
+	<bean id="lc.mdt.evaluator.doclib.isMDTFolderLottoType" parent="evaluator.doclib.metadata.nodeType">
+		<property name="types">
+			<list>
+				<value>mdt:folderLotto</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Is type "mdt:folderMatricola" evaluator -->
+	<bean id="lc.mdt.evaluator.doclib.isMDTFolderMatricolaType" parent="evaluator.doclib.metadata.nodeType">
+		<property name="types">
+			<list>
+				<value>mdt:folderMatricola</value>
+			</list>
+		</property>
+	</bean>
+
+   <!-- Has "mdt:MecaDocTrackElement" evaluator -->
+   <bean id="lc.mdt.evaluator.doclib.hasMecaDocTrackElementIDAspect" parent="evaluator.doclib.metadata.hasAspect">
+      <property name="aspects">
+         <list>
+            <value>mdt:MecaDocTrackElementIDAspect</value>
+         </list>
+      </property>
+   </bean>
+
+   <!-- Has "mdt:MecaDocTrackElementGroup" evaluator -->
+   <bean id="lc.mdt.evaluator.doclib.hasMecaDocTrackElementGroupAspect" parent="evaluator.doclib.metadata.hasAspect">
+      <property name="aspects">
+         <list>
+            <value>mdt:MecaDocTrackElementGroupAspect</value>
+         </list>
+      </property>
+   </bean>
+
+
+
+</beans>

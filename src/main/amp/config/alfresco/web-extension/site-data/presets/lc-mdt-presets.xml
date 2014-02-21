@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<presets>
+
+   <!--
+      lc mdt site preset
+
+      Defines a predefined dashboard config and the default site pages that shall be visible.
+      The preset id will be saved in the repo for the site and can later be used to decide if
+      customizations shall be applied or not using a site evaluator.
+   -->
+   <preset id="lc-mdt-preset">
+      <components>
+
+         <!-- Dashboard title (mandatory) -->
+         <component>
+            <scope>page</scope>
+            <region-id>title</region-id>
+            <source-id>site/${siteid}/dashboard</source-id>
+            <url>/components/title/collaboration-title</url>
+         </component>
+         <!-- Dashboard navigation (mandatory) -->
+         <component>
+            <scope>page</scope>
+            <region-id>navigation</region-id>
+            <source-id>site/${siteid}/dashboard</source-id>
+            <url>/components/navigation/collaboration-navigation</url>
+         </component>
+
+         <!-- Dashlets (Optional) -->
+         <component>
+            <scope>page</scope>
+            <region-id>component-1-1</region-id>
+            <source-id>site/${siteid}/dashboard</source-id>
+            <url>/components/dashlets/site-search</url>
+         </component>
+         
+        <component>
+            <scope>page</scope>
+            <region-id>component-1-2</region-id>
+            <source-id>site/${siteid}/dashboard</source-id>
+            <url>/components/dashlets/colleagues</url>
+            <properties>
+               <height>504</height>
+            </properties>
+         </component>
+
+      </components>
+      <pages>
+         <page id="site/${siteid}/dashboard">
+            <title>mdt Site Dashboard</title>
+            <title-id>page.lc-mdt-dashboard.title</title-id>
+            <description>mdt site's dashboard page</description>
+            <description-id>page.lc-mdt-dashboard.description</description-id>
+
+            <!-- dashboard-2-columns-wide-left, dashboard-2-columns-wide-right, dashboard-3-columns, dashboard-4-columns-->
+            <template-instance>dashboard-1-column</template-instance>
+            <authentication>user</authentication>
+
+            <!--
+               Every site has a dashboard page object, let's use it's properties to site specific string properties.
+               Can be read (& modified) by webscripts using:
+               sitedata.getPage("site/" + siteId + "/dashboard").properties.sitePages
+            -->
+            <properties>
+
+               <!-- Defined the default pages that shall be visible for the site -->
+               <sitePages>
+               <!--
+               [ { "pageId": "lc-mdt-home" }, { "pageId": "documentlibrary" } ]
+               -->
+               [ { "pageId": "documentlibrary" } ]
+               </sitePages>
+
+               <!--
+                  Optional:
+                  Rename pages by providing additional properties tied to a pageid
+                  that later will be used by title.get & collaboration-navigation.get
+               -->
+               <pageMetadata>
+               {
+                  "documentlibrary":
+                  {
+                     "titleId":"lc.mdt.page.documentlibrary.title",
+                     "descriptionId":"lc.mdt.page.documentlibrary.description"
+                  }
+               }
+               </pageMetadata>
+
+            </properties>
+         </page>
+      </pages>
+   </preset>
+
+</presets>
